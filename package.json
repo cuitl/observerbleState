@@ -1,0 +1,24 @@
+{
+  "name": "observerblestate",
+  "version": "0.0.1",
+  "description": "observerble state for React components share",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cuitl/observerbleState.git"
+  },
+  "keywords": [
+    "React",
+    "share",
+    "state"
+  ],
+  "author": "https://github.com/cuitl",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cuitl/observerbleState/issues"
+  },
+  "homepage": "https://github.com/cuitl/observerbleState#readme"
+}
