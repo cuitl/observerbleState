@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react'
-
 import Observerble, { HookFn } from './Observerble'
-import userObserverble, { DepsFn } from './userObserverble'
+import useObserverble, { DepsFn, useSimpleObserverble } from './useObserverble'
 
 type ExposeProps<S> = {
   state: Observerble<S>['state']
@@ -15,11 +13,9 @@ type ExposeProps<S> = {
   onTrack: (fn: HookFn) => void
   /** before remove a observer */
   onUnTrack: (fn: HookFn) => void
-  /** state change & before emit to other observer */
+  /** state change & before emit to all observers */
   onTrigger: (fn: HookFn) => void
-  /**
-   * after state change
-   */
+  /** after state change */
   onChange: (fn: (state: S, prev: S) => void) => void
 }
 
@@ -40,15 +36,13 @@ export default function createGlobalState<S>(
    * @param depsFn (custom|auto) judge state change to control component update
    * @returns [state, setState]
    */
-  const hook = (depsFn?: DepsFn<S>) => userObserverble(globalState, depsFn)
+  const hook = (depsFn?: DepsFn<S>) => useObserverble(globalState, depsFn)
 
   const exposeProps = {} as ExposeProps<S>
 
   Object.defineProperties(exposeProps, {
     state: {
-      get() {
-        return globalState.state
-      },
+      get: () => globalState.state,
     },
     setState: {
       get: () => globalState.set.bind(globalState),
@@ -89,20 +83,7 @@ export default function createGlobalState<S>(
 export const createSimpleGlobalState = <S>(state: S) => {
   const globalState = new Observerble<S>(state)
 
-  const hook = () => {
-    const [, forceUpdate] = useState([])
-
-    useEffect(() => {
-      return globalState.subscribe(() => {
-        // console.log('state change from', prev, ' to ', state)
-        forceUpdate([])
-      })
-    }, [])
-
-    const { state, set } = globalState
-
-    return [state, set] as [S, typeof set]
-  }
+  const hook = () => useSimpleObserverble(globalState)
 
   const { get, set, on } = globalState
   return Object.assign(hook, {
