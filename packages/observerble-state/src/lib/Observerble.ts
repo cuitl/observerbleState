@@ -60,7 +60,7 @@ export default class Observerble<S> extends Subject<SubscribeObserver<S>> {
 
       this.invokeHook('onTrigger')
 
-      this.emit(prevState, newState)
+      this.emit(newState, prevState)
 
       this.invokeHook('onChange', newState, prevState)
     }
