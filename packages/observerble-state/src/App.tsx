@@ -1,8 +1,56 @@
 import './App.css'
 
-import { useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import reactLogo from './assets/react.svg'
+import createGlobalState from './lib/createGlobalState'
+
+const useCount = createGlobalState(
+  {
+    num: 0,
+    time: 0,
+  },
+  ({ onChange, onTrap, onUnTrap, setState, onTrack }) => {
+    console.log('state created')
+
+    onChange((state, prev) => {
+      console.log('state change from ', prev, ' to ', state)
+    })
+
+    onTrap(() => {
+      console.log('onTrap: state is using....')
+      const t = setInterval(() => {
+        setState(prev => ({ ...prev, time: prev.time + 1 }))
+      }, 3000)
+      onUnTrap(() => {
+        console.log('onUnTrap....')
+        clearInterval(t)
+      })
+    })
+
+    onTrack(() => {
+      console.log('add a new Observer')
+    })
+  },
+)
+
+const Counter = () => {
+  // const [{ num, time }, setState] = useCount()
+  // const [{ num, time }, setState] = useCount(state => [state.num])
+  const [{ num, time }, setState] = useCount(
+    (state, prev) => state.num !== prev.num,
+  )
+
+  const onIncrease = () => {
+    setState(prev => ({ ...prev, num: prev.num + 1 }))
+  }
+
+  return (
+    <button onClick={onIncrease}>
+      num: {num}, time: {time}
+    </button>
+  )
+}
 
 function App() {
   const [count, setCount] = useState(0)
@@ -17,7 +65,9 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
+      <h1>
+        Vite + React : <Counter />
+      </h1>
       <div className="card">
         <button onClick={() => setCount(count => count + 1)}>
           count is {count}
