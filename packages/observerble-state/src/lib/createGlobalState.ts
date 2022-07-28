@@ -5,6 +5,7 @@ type ExposeProps<S> = {
   state: Observerble<S>['state']
   /** modify state */
   setState: Observerble<S>['set']
+  logObservers: Observerble<S>['logObservers']
   /** state begin use */
   onTrap: (fn: HookFn) => void
   /** state begin out of use */
@@ -46,6 +47,9 @@ export default function createGlobalState<S>(
     },
     setState: {
       get: () => globalState.set.bind(globalState),
+    },
+    logObservers: {
+      get: () => globalState.logObservers.bind(globalState),
     },
     onTrap: {
       get: () => globalState.on.bind(globalState, 'onTrap'),
