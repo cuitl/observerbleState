@@ -35,7 +35,7 @@ export default function useObserverble<S>(
 
   useEffect(() => {
     initDeps(globalState)
-    return globalState.subscribe(observer)
+    return globalState.subscribe(observer, '__React_Comp__')
   }, [])
 
   const { state, set } = globalState
