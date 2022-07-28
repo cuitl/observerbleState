@@ -3,12 +3,19 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
+  "main": "dist/index.js",
+  "module": "es/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build --mode lib",
     "build:app": "tsc && vite build",
     "preview": "vite preview"
   },
+  "files": [
+    "dist",
+    "es"
+  ],
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
