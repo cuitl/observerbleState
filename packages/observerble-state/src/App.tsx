@@ -10,7 +10,7 @@ const useCount = createGlobalState(
     num: 0,
     time: 0,
   },
-  ({ onChange, onTrap, onUnTrap, setState, onTrack }) => {
+  ({ logObservers, onChange, onTrap, onUnTrap, setState, onTrack }) => {
     console.log('state created')
 
     onChange((state, prev) => {
@@ -19,6 +19,7 @@ const useCount = createGlobalState(
 
     onTrap(() => {
       console.log('onTrap: state is using....')
+      logObservers('Log Ob: ')
       const t = setInterval(() => {
         setState(prev => ({ ...prev, time: prev.time + 1 }))
       }, 3000)
