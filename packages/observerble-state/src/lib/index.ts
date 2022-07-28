@@ -2,7 +2,6 @@
  * @file observerble-state libaray entry js
  */
 // import createGlobalState, {createSimpleGlobalState} from './createGlobalState'
-import welcome from './welcome'
 
 export {
   default as createGlobalState,
@@ -14,5 +13,3 @@ export {
   default as useObserverble,
   useSimpleObserverble,
 } from './useObserverble'
-
-export { welcome }
