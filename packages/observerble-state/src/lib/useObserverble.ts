@@ -4,6 +4,8 @@ import Observerble from './Observerble'
 
 export type DepsFn<S> = (newState: S, prevState: S) => boolean | any[]
 
+const Observer_React_Comp_Name = '__React_Comp__'
+
 /**
  * add a new observer(React component) for globalState
  * component observe globalState
@@ -35,7 +37,7 @@ export default function useObserverble<S>(
 
   useEffect(() => {
     initDeps(globalState)
-    return globalState.subscribe(observer, '__React_Comp__')
+    return globalState.subscribe(observer, Observer_React_Comp_Name)
   }, [])
 
   const { state, set } = globalState
@@ -79,7 +81,7 @@ export function useObserverbleOld<S>(
         return
       }
       forceUpdate([])
-    }, '__React_Comp__')
+    }, Observer_React_Comp_Name)
   }, [])
 
   const { state, set } = globalState
@@ -137,7 +139,7 @@ export function useSimpleObserverble<S>(globalState: Observerble<S>) {
   useEffect(() => {
     return globalState.subscribe(() => {
       forceUpdate([])
-    })
+    }, Observer_React_Comp_Name)
   }, [])
 
   const { state, set } = globalState
