@@ -1,5 +1,6 @@
 import Observer from './Observer'
 import Subject from './Subject'
+import { isDeepEqual } from './utils'
 
 export type SetStateAction<S> = (prevState: S) => S
 
@@ -19,6 +20,8 @@ export interface HookFn {
   (...args: any[]): void
   hook?: Hook
 }
+
+export type CompareStateDeep<S> = (state: S, prevState: S) => boolean
 
 export default class Observerble<S> extends Subject<SubscribeObserver<S>> {
   private hookMap: Record<Hook, HookFn[]> = {
@@ -48,14 +51,25 @@ export default class Observerble<S> extends Subject<SubscribeObserver<S>> {
     return this._state
   }
 
-  set(state: S | SetStateAction<S>, deep = false) {
+  set(
+    state: S | SetStateAction<S>,
+    deep: CompareStateDeep<S> | boolean = true,
+  ) {
     const prevState = this.state
     const newState =
       typeof state === 'function'
         ? (state as SetStateAction<S>)(prevState)
         : state
 
-    if (this.compare(prevState, newState, deep)) {
+    let hasChange: boolean
+
+    if (typeof deep === 'function') {
+      hasChange = (deep as CompareStateDeep<S>)(newState, prevState)
+    } else {
+      hasChange = this.compare(prevState, newState, deep)
+    }
+
+    if (hasChange) {
       this._state = newState
 
       this.invokeHook('onTrigger')
@@ -68,7 +82,7 @@ export default class Observerble<S> extends Subject<SubscribeObserver<S>> {
 
   compare(prevState: S, newState: S, deep = false) {
     if (deep) {
-      // compare deep
+      return !isDeepEqual(newState, prevState)
     }
     return !Object.is(prevState, newState)
   }
