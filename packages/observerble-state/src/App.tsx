@@ -11,22 +11,25 @@ const useCount = createGlobalState(
     time: 0,
   },
   ({ logObservers, onChange, onTrap, onUnTrap, setState, onTrack }) => {
-    console.log('state created')
+    console.log('State Setup: 数据创建完成')
 
     onChange((state, prev) => {
-      console.log('state change from ', prev, ' to ', state)
+      console.log('onChange： state change from ', prev, ' to ', state)
     })
+
+    let t: Parameters<typeof clearInterval>[0]
 
     onTrap(() => {
       console.log('onTrap: state is using....')
       logObservers('Log Ob: ')
-      const t = setInterval(() => {
+      t = setInterval(() => {
         setState(prev => ({ ...prev, time: prev.time + 1 }))
       }, 3000)
-      onUnTrap(() => {
-        console.log('onUnTrap....')
-        clearInterval(t)
-      })
+    })
+
+    onUnTrap(() => {
+      console.log('onUnTrap....')
+      clearInterval(t)
     })
 
     onTrack(() => {
@@ -37,7 +40,10 @@ const useCount = createGlobalState(
 
 const Counter = memo(function Counter() {
   // const [{ num, time }, setState] = useCount()
+
+  // when num change to rerender 1
   // const [{ num, time }, setState] = useCount(state => [state.num])
+  // when num change to rerender 2
   const [{ num, time }, setState] = useCount(
     (state, prev) => state.num !== prev.num,
   )
@@ -55,6 +61,7 @@ const Counter = memo(function Counter() {
 
 function App() {
   const [count, setCount] = useState(0)
+  const [toggle, setToggle] = useState(true)
 
   return (
     <div className="App">
@@ -66,17 +73,21 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
+
       <h1>Vite + React</h1>
       <h2>
         <span>Global State: </span>
-        <Counter />
+        {toggle && <Counter />}
+        <button onClick={() => setToggle(p => !p)}>组件显示/销毁</button>
       </h2>
 
       <button
         onClick={() => useCount.setState(p => ({ ...p, num: p.num + 1 }))}
+        style={{ fontSize: 12 }}
       >
         Increase count outof Counter Component
       </button>
+
       <div className="card">
         <button onClick={() => setCount(count => count + 1)}>
           Local State: count is {count}
