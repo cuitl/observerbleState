@@ -1,6 +1,6 @@
 import './App.css'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useEffect, useMemo, useRef, useState } from 'react'
 
 import reactLogo from './assets/react.svg'
 import createGlobalState from './lib/createGlobalState'
@@ -35,7 +35,7 @@ const useCount = createGlobalState(
   },
 )
 
-const Counter = () => {
+const Counter = memo(function Counter() {
   // const [{ num, time }, setState] = useCount()
   // const [{ num, time }, setState] = useCount(state => [state.num])
   const [{ num, time }, setState] = useCount(
@@ -51,7 +51,7 @@ const Counter = () => {
       num: {num}, time: {time}
     </button>
   )
-}
+})
 
 function App() {
   const [count, setCount] = useState(0)
@@ -66,12 +66,20 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>
-        Vite + React : <Counter />
-      </h1>
+      <h1>Vite + React</h1>
+      <h2>
+        <span>Global State: </span>
+        <Counter />
+      </h2>
+
+      <button
+        onClick={() => useCount.setState(p => ({ ...p, num: p.num + 1 }))}
+      >
+        Increase count outof Counter Component
+      </button>
       <div className="card">
         <button onClick={() => setCount(count => count + 1)}>
-          count is {count}
+          Local State: count is {count}
         </button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR

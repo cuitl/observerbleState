@@ -44,34 +44,43 @@ export default function createGlobalState<S>(
   Object.defineProperties(exposeProps, {
     state: {
       get: () => globalState.state,
+      enumerable: true,
     },
     setState: {
       get: () => globalState.set.bind(globalState),
+      enumerable: true,
     },
     logObservers: {
       get: () => globalState.logObservers.bind(globalState),
+      enumerable: true,
     },
     onTrap: {
       get: () => globalState.on.bind(globalState, 'onTrap'),
+      enumerable: true,
     },
     onUnTrap: {
       get: () => globalState.on.bind(globalState, 'onUnTrap'),
+      enumerable: true,
     },
     onChange: {
       get: () => globalState.on.bind(globalState, 'onChange'),
+      enumerable: true,
     },
     onTrack: {
       get: () => globalState.on.bind(globalState, 'onTrack'),
+      enumerable: true,
     },
     onUnTrack: {
       get: () => globalState.on.bind(globalState, 'onUnTrack'),
+      enumerable: true,
     },
     onTrigger: {
       get: () => globalState.on.bind(globalState, 'onTrigger'),
+      enumerable: true,
     },
   })
 
-  Object.assign(hook, exposeProps)
+  // Object.assign(hook, exposeProps)
 
   setup?.(exposeProps)
 
